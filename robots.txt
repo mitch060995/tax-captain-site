@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tax-captain.com/sitemap.xml

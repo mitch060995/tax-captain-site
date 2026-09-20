@@ -1,0 +1,293 @@
+/* Tax Captain — one stylesheet for the whole site.
+   ------------------------------------------------------------------
+   The look is a ship's log: a paper ground, hairline rules, navy ink
+   and one brass accent used sparingly. A captain keeping the log is
+   the oldest version of what this app does, so the site is set like a
+   logbook page rather than like a SaaS landing page. */
+
+:root {
+  --ink:        #12222F;
+  --ink-soft:   #4A5C68;
+  --paper:      #F7F4ED;
+  --paper-2:    #FFFFFF;
+  --rule:       #D9D2C4;
+  --brass:      #A9761B;
+  --brass-soft: #F0E3C8;
+  --navy:       #0E2233;
+
+  --measure: 66ch;
+  --wide: 1080px;
+
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.9rem);
+  --step-0:  clamp(1rem, 0.96rem + 0.2vw, 1.09rem);
+  --step-1:  clamp(1.2rem, 1.12rem + 0.4vw, 1.45rem);
+  --step-2:  clamp(1.5rem, 1.34rem + 0.8vw, 2rem);
+  --step-3:  clamp(1.95rem, 1.6rem + 1.75vw, 3.1rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink:        #EDE7DA;
+    --ink-soft:   #A9B4BD;
+    --paper:      #0C1922;
+    --paper-2:    #12232F;
+    --rule:       #263B49;
+    --brass:      #E0AE4E;
+    --brass-soft: #2A2013;
+    --navy:       #081520;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .brand {
+  font-family: Archivo, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: var(--step-3); }
+h2 { font-size: var(--step-2); margin-top: 2.2em; }
+h3 { font-size: var(--step-1); margin-top: 1.8em; }
+
+p, ul, ol { margin: 0 0 1.1em; }
+ul, ol { padding-left: 1.2em; }
+li { margin-bottom: 0.4em; }
+
+a { color: inherit; text-decoration-color: var(--brass); text-underline-offset: 3px; }
+a:hover { color: var(--brass); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: 20px; }
+.prose { max-width: var(--measure); }
+.prose h2:first-of-type { margin-top: 1.2em; }
+
+/* ---------------------------------------------------------- masthead -- */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.masthead .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  padding-block: 14px;
+}
+
+.brand {
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.brand svg { width: 26px; height: 26px; flex: none; color: var(--brass); }
+
+.nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: var(--step--1); }
+
+.nav a {
+  text-decoration: none;
+  color: var(--ink-soft);
+  padding-block: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.nav a:hover { color: var(--brass); }
+
+.nav a[aria-current='page'] {
+  color: var(--ink);
+  border-bottom-color: var(--brass);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------- hero -- */
+
+.hero {
+  background: var(--navy);
+  color: #F2EDE1;
+  padding-block: clamp(56px, 9vw, 104px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero h1 { max-width: 16ch; }
+.hero .lede { font-size: var(--step-1); max-width: 46ch; color: #C7D2DA; margin-bottom: 1.4em; }
+.hero .rule { width: 72px; height: 3px; background: var(--brass); margin-bottom: 26px; }
+
+.badges { display: flex; flex-wrap: wrap; gap: 10px; font-size: var(--step--1); }
+
+.badge {
+  border: 1px solid rgba(233, 222, 200, 0.28);
+  border-radius: 999px;
+  padding: 5px 13px;
+  color: #E4DBC9;
+}
+
+/* ------------------------------------------------------------ pages -- */
+
+.page-head {
+  border-bottom: 1px solid var(--rule);
+  padding-block: clamp(36px, 6vw, 64px);
+}
+
+.page-head .kicker {
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.page-head p { max-width: var(--measure); color: var(--ink-soft); margin-bottom: 0; }
+
+section { padding-block: clamp(36px, 5vw, 60px); }
+section + section { border-top: 1px solid var(--rule); }
+
+/* ------------------------------------------------------------- grid -- */
+
+.cards {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  margin-top: 8px;
+}
+
+.card {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.card h3 { margin-top: 0; font-size: var(--step-1); }
+.card p:last-child { margin-bottom: 0; }
+
+.card .num {
+  font-family: Archivo, sans-serif;
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  color: var(--brass);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* A ledger row: label left, detail right, hairline between. */
+.ledger { border-top: 1px solid var(--rule); margin-top: 18px; }
+
+.ledger > div {
+  border-bottom: 1px solid var(--rule);
+  padding-block: 16px;
+  display: grid;
+  gap: 4px 28px;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+}
+
+@media (max-width: 640px) { .ledger > div { grid-template-columns: 1fr; } }
+
+.ledger dt, .ledger .term {
+  font-family: Archivo, sans-serif;
+  font-weight: 700;
+  margin: 0;
+}
+
+.ledger dd, .ledger .detail { margin: 0; color: var(--ink-soft); }
+
+.note {
+  background: var(--brass-soft);
+  border-left: 3px solid var(--brass);
+  padding: 16px 18px;
+  border-radius: 0 8px 8px 0;
+  margin-block: 1.6em;
+  max-width: var(--measure);
+}
+
+.note p:last-child { margin-bottom: 0; }
+.note strong { font-family: Archivo, sans-serif; }
+
+.cta {
+  display: inline-block;
+  background: var(--brass);
+  color: #12222F;
+  font-family: Archivo, sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+
+.cta:hover { color: #12222F; filter: brightness(1.07); }
+
+.updated {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  border-top: 1px solid var(--rule);
+  padding-top: 14px;
+  margin-top: 2.4em;
+  max-width: var(--measure);
+}
+
+/* ----------------------------------------------------------- footer -- */
+
+footer {
+  border-top: 1px solid var(--rule);
+  background: var(--paper-2);
+  padding-block: 36px;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+footer .cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 44px;
+  justify-content: space-between;
+}
+
+footer nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--brass); }
+footer .fine { margin-top: 26px; margin-bottom: 0; max-width: 62ch; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* On a phone the six nav links wrap to three lines. A sticky header that
+   tall eats a third of the screen, so below 700px it scrolls away with the
+   rest of the page and the links tighten up. */
+@media (max-width: 700px) {
+  .masthead { position: static; }
+  .nav { gap: 2px 16px; }
+}
