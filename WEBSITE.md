@@ -1,181 +1,144 @@
 # The website: tax-captain.com
 
 Six static pages, one stylesheet, no JavaScript and no build step. GitHub
-Pages serves it for free, including the HTTPS certificate for your own domain.
+Pages serves it for free, and Cloudflare holds the domain's DNS.
 
 ```
 index.html      Home
 features.html   Features
-about.html      About
-support.html    Support
-privacy.html    Privacy Policy      <- Apple asks for this URL
-terms.html      Terms of Service
+about.html      About - includes "Who we are" with the ABN
+support.html    Support               <- Apple's Support URL
+privacy.html    Privacy Policy        <- Apple's Privacy Policy URL
+terms.html      Terms of Service      <- linked from the in-app paywall
 styles.css      the whole design
-CNAME           the custom domain, read by GitHub Pages
+favicon.svg     the browser-tab icon
+CNAME           the custom domain - GitHub Pages reads this, never delete it
 robots.txt      let search engines in
-sitemap.xml     the six pages, for search engines
+sitemap.xml     the pages, for search engines
 ```
-
-`CNAME` is not optional and not a normal file: GitHub Pages reads it on every
-deploy to know which domain this site answers on. It contains one line,
-`tax-captain.com`, no `https://` and no trailing slash. If it goes missing,
-the custom domain silently unbinds and the site falls back to
-`<you>.github.io/<repo>`.
 
 ---
 
-## Step 0 - move this folder out of the app
+## 1. DNS at Cloudflare (done - kept for reference)
 
-It was delivered to `taxapp\_website\` because that is the only folder this
-machine shares. It does not belong inside the app repo - the app repo is
-private and this one has to be public. Move it first:
+Set up and working as of 24 September 2026. The domain's DNS lives at
+Cloudflare, not at the registrar. If the site ever stops resolving, these are
+the records that should be there - dash.cloudflare.com -> **tax-captain.com**
+-> **DNS** -> **Records**:
 
-```powershell
-Move-Item C:\Users\mitch\Desktop\Hobbies\taxapp\_website `
-          C:\Users\mitch\Desktop\Hobbies\tax-captain-site
-```
+| Type  | Name  | Content                  | Proxy status |
+|-------|-------|--------------------------|--------------|
+| A     | `@`   | `185.199.108.153`        | DNS only     |
+| A     | `@`   | `185.199.109.153`        | DNS only     |
+| A     | `@`   | `185.199.110.153`        | DNS only     |
+| A     | `@`   | `185.199.111.153`        | DNS only     |
+| AAAA  | `@`   | `2606:50c0:8000::153`    | DNS only     |
+| AAAA  | `@`   | `2606:50c0:8001::153`    | DNS only     |
+| AAAA  | `@`   | `2606:50c0:8002::153`    | DNS only     |
+| AAAA  | `@`   | `2606:50c0:8003::153`    | DNS only     |
+| CNAME | `www` | `mitch060995.github.io`  | DNS only     |
 
-Everything below happens in the new folder.
+**Proxy status must be "DNS only" - the grey cloud, not the orange one.**
+Cloudflare switches every new record to Proxied by default. Proxied records
+answer with Cloudflare's addresses instead of GitHub's, so GitHub's check
+keeps failing and it can never issue your HTTPS certificate. Click the orange
+cloud on each record until it turns grey.
 
----
+**Leave the MX and TXT records alone.** They are Cloudflare Email Routing -
+they are what makes `support@tax-captain.com` receive mail.
 
-## Step 1 - make the repository
-
-The repository has to be **public**. GitHub Pages on a free account will not
-serve a private repo, and there is nothing secret in here anyway.
-
-1. github.com -> **+** (top right) -> **New repository**
-2. Name: `tax-captain-site`
-3. Visibility: **Public**
-4. Leave "Add a README", .gitignore and licence all **unticked** - an empty
-   repo is what the commands below expect
-5. **Create repository**
-
-## Step 2 - push the files
-
-In `C:\Users\mitch\Desktop\Hobbies\tax-captain-site`:
-
-```powershell
-git init
-git add .
-git commit -m "Tax Captain website"
-git branch -M main
-git remote add origin https://github.com/<your-username>/tax-captain-site.git
-git push -u origin main
-```
-
-Replace `<your-username>`. If git asks for a password, it wants a **personal
-access token**, not your GitHub password: github.com -> Settings -> Developer
-settings -> Personal access tokens -> Tokens (classic) -> Generate new token,
-tick `repo`, copy it, paste it as the password. Windows will remember it.
-
-## Step 3 - turn Pages on
-
-Repository -> **Settings** -> **Pages** (left sidebar).
-
-- **Source**: Deploy from a branch
-- **Branch**: `main`, folder `/ (root)`
-- **Save**
-
-Wait a minute or two. The site appears at
-`https://<your-username>.github.io/tax-captain-site/`. Check it works there
-**before** touching DNS - if something is wrong, you want to know it is the
-site and not the domain.
-
-Note the pages will look slightly broken at that address if you visit a
-sub-page directly, because links are relative. That is fine; on the real
-domain everything sits at the root.
-
-## Step 4 - point the domain at it
-
-Two halves, and both are needed.
-
-**On GitHub:** Settings -> Pages -> **Custom domain** -> type
-`tax-captain.com` -> **Save**. GitHub will re-commit the `CNAME` file; that
-is expected. Run `git pull` afterwards so your local copy matches.
-
-**At your registrar** (wherever you bought tax-captain.com), open the DNS
-records for the domain and add:
-
-| Type  | Name / Host | Value                  |
-|-------|-------------|------------------------|
-| A     | `@`         | `185.199.108.153`      |
-| A     | `@`         | `185.199.109.153`      |
-| A     | `@`         | `185.199.110.153`      |
-| A     | `@`         | `185.199.111.153`      |
-| AAAA  | `@`         | `2606:50c0:8000::153`  |
-| AAAA  | `@`         | `2606:50c0:8001::153`  |
-| AAAA  | `@`         | `2606:50c0:8002::153`  |
-| AAAA  | `@`         | `2606:50c0:8003::153`  |
-| CNAME | `www`       | `<your-username>.github.io.` |
-
-All four A records, all four AAAA records. `@` means the bare domain; some
-registrars want the field left blank instead. The AAAA records are optional
-but cost nothing and cover people on IPv6-only mobile networks.
-
-**Do not delete your MX records.** Those are what make
-`support@tax-captain.com` receive mail. A records, AAAA records and MX
-records live side by side and do different jobs. If the registrar offers to
-"reset to defaults" or "park the domain", say no.
-
-## Step 5 - HTTPS
-
-DNS takes anywhere from ten minutes to a few hours. Once GitHub sees it,
-Settings -> Pages stops showing the yellow "DNS check in progress" warning
-and the **Enforce HTTPS** checkbox becomes tickable. Tick it. GitHub issues
-and renews a Let's Encrypt certificate automatically and forever.
-
-Until that box is ticked the site is reachable over plain HTTP, which Apple
-will not accept for a privacy policy URL. Check it before you submit.
-
-Verify from PowerShell:
+Check it worked, from PowerShell, 5-15 minutes later:
 
 ```powershell
 nslookup tax-captain.com
+```
+
+You want four `185.199.x.153` addresses. A `104.x` or `172.67.x` address
+means a record is still proxied.
+
+## 2. HTTPS
+
+GitHub -> the `tax-captain-site` repo -> **Settings** -> **Pages**. Press
+**Save** on the custom domain again to make GitHub re-check. When the warning
+clears, the **Enforce HTTPS** box becomes tickable - that can take up to a day
+after DNS starts working. Tick it.
+
+```powershell
 curl.exe -I https://tax-captain.com
 ```
 
-The first should list the four GitHub IPs. The second should say `HTTP/2 200`.
+`HTTP/2 200` means it is live.
 
 ---
 
-## Updating the site later
+## 3. Updating the site
 
-Edit the files, then:
+Every change goes live the same way:
 
 ```powershell
+cd C:\Users\mitch\Desktop\Hobbies\tax-captain-site
+git pull
 git add .
-git commit -m "what changed"
+git commit -m "What changed"
 git push
 ```
 
-Live in under a minute. There is no build and no deploy step to wait on.
+`git pull` first, every time. GitHub sometimes commits to this repo itself -
+it rewrites `CNAME` when you save the custom domain - and a push on top of a
+commit you do not have is refused with "Updates were rejected". Pulling first
+means that never happens.
 
-To preview a change before pushing, just double-click `index.html` - it opens
-in your browser and works exactly as it will live, because there is no build.
+Live within a minute or two. To preview before pushing, double-click
+`index.html` - there is no build, so what opens is exactly what goes live.
+
+**Without the command line:** github.com -> the repo -> **Add file** ->
+**Upload files**, drag the changed files in, **Commit changes**. It works, but
+then your local folder is out of date - run `git pull` before the next change
+you make locally.
+
+---
+
+## 4. Adding app screenshots
+
+Real screenshots are the single biggest thing this site is missing. Take them
+on the phone:
+
+- **Use sample data, not your own.** A map screenshot of your real trips shows
+  where you live and work, to anyone. A fresh install (or the web build) opens
+  with sample trips - use that, or pick screens with no map on them.
+- Four is the right number: the home screen, a trip with its route on the
+  map, a receipt being scanned, and the year-end report.
+- iPhone: side button + volume up. Android: power + volume down.
+
+Send them over and they get resized, compressed and set into phone frames on
+the home page. For reference, they go in an `img/` folder in this repo; keep
+each file under about 200 KB, or the page gets slow on a phone on a job site.
 
 ---
 
 ## What Apple wants from this
 
-The App Store submission form has fields for:
+**Developer Program enrolment** (the rejection you got): the site must load,
+have real content, and be visibly tied to the organisation you enrolled as.
+The footer on every page and the "Who we are" section on the About page name
+**L.T AUSTIN & M.J CARTER** with the ABN, linked straight to the Australian
+Business Register - which also lists the business name Tax-captain. A reviewer
+can connect the domain to the partnership in one click.
 
-- **Privacy Policy URL** (required): `https://tax-captain.com/privacy.html`
-- **Support URL** (required): `https://tax-captain.com/support.html`
+When you resubmit, check that the organisation name on your enrolment matches
+the ABR entity name exactly, and use the `support@tax-captain.com` address as
+your contact where you can - an email on the same domain as the website is the
+simplest evidence that the domain is yours.
+
+**App Store submission** (later): the form asks for
+
+- **Privacy Policy URL**: `https://tax-captain.com/privacy.html`
+- **Support URL**: `https://tax-captain.com/support.html`
 - **Marketing URL** (optional): `https://tax-captain.com/`
 
-All three must be live and reachable over HTTPS at the moment you submit, and
-must stay live afterwards. A dead privacy policy URL is a rejection.
+All three must be live over HTTPS when you submit, and stay live.
 
-Two things the website does **not** do for you:
-
-1. **The privacy "nutrition label"** in App Store Connect is a separate
-   questionnaire you fill in there. For this app the honest answers are "no
-   data collected" throughout - the app has no server and sends nothing. Be
-   ready to say so when the review asks why an app with location permission
-   collects nothing.
-2. **`privacy.html` and `terms.html` were drafted, not lawyered.** They
-   describe what the app actually does, accurately, which is the important
-   part. But if this is going to take money or carry real liability, spend an
-   hour with a solicitor on them. They are a starting point, not a finished
-   legal document.
+**The legal pages were drafted, not lawyered.** They describe what the app
+actually does, accurately, which is the important part. Before the
+subscription takes real money, an hour with a solicitor on `terms.html` and
+`privacy.html` is money well spent.

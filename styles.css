@@ -14,6 +14,9 @@
   --brass:      #A9761B;
   --brass-soft: #F0E3C8;
   --navy:       #0E2233;
+  --work:       #2F6B4F;
+  --work-soft:  #DDEDE3;
+  --margin:     #C9533D;
 
   --measure: 66ch;
   --wide: 1080px;
@@ -35,6 +38,9 @@
     --brass:      #E0AE4E;
     --brass-soft: #2A2013;
     --navy:       #081520;
+    --work:       #8FD1AE;
+    --work-soft:  #163326;
+    --margin:     #E07A63;
   }
 }
 
@@ -133,11 +139,31 @@ a:focus-visible, button:focus-visible {
 /* ------------------------------------------------------------- hero -- */
 
 .hero {
-  background: var(--navy);
+  background-color: var(--navy);
+  /* Chart paper: the faint grid a navigator plots a course on. */
+  background-image:
+    linear-gradient(rgba(233, 222, 200, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 222, 200, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: -1px -1px;
   color: #F2EDE1;
-  padding-block: clamp(56px, 9vw, 104px);
+  padding-block: clamp(48px, 7vw, 88px);
   border-bottom: 1px solid var(--rule);
 }
+
+.hero .wrap {
+  display: grid;
+  gap: clamp(32px, 5vw, 56px);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+}
+
+.hero figure { margin: 0; }
+.hero figure svg { display: block; width: 100%; height: auto; max-width: 520px; margin-inline: auto; }
+.hero figcaption { font-size: var(--step--1); color: #9FB0BC; text-align: center; margin-top: 10px; }
 
 .hero h1 { max-width: 16ch; }
 .hero .lede { font-size: var(--step-1); max-width: 46ch; color: #C7D2DA; margin-bottom: 1.4em; }
@@ -291,3 +317,147 @@ footer .fine { margin-top: 26px; margin-bottom: 0; max-width: 62ch; }
   .masthead { position: static; }
   .nav { gap: 2px 16px; }
 }
+
+
+/* --------------------------------------------------------------- icons -- */
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--brass-soft);
+  color: var(--brass);
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+}
+
+.icon svg { width: 27px; height: 27px; }
+
+h2 .h-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--brass-soft);
+  color: var(--brass);
+  vertical-align: -6px;
+  margin-right: 10px;
+}
+
+h2 .h-icon svg { width: 20px; height: 20px; }
+
+.section-lede { color: var(--ink-soft); max-width: var(--measure); margin-bottom: 22px; }
+
+/* ------------------------------------------------------ the log page -- */
+/* A page out of the year-end report, set like a ledger book: ruled lines,
+   figures in columns, and the red margin rule a real logbook has. */
+
+.logpage {
+  margin: 0;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  box-shadow: 0 1px 0 var(--rule), 0 18px 40px -28px rgba(14, 34, 51, 0.45);
+  overflow: hidden;
+}
+
+.logpage-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 14px 20px 12px 28px;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--step--1);
+}
+
+.logpage-head strong {
+  font-family: Archivo, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.logpage-head span { color: var(--ink-soft); }
+
+.table-scroll { overflow-x: auto; }
+
+.logpage table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  background-image: linear-gradient(90deg, transparent 18px, var(--margin) 18px, var(--margin) 19px, transparent 19px);
+  background-repeat: repeat-y;
+}
+
+.logpage th, .logpage td {
+  text-align: left;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+.logpage th:first-child, .logpage td:first-child { padding-left: 32px; white-space: nowrap; }
+
+.logpage th {
+  font-family: Archivo, sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.logpage .num { text-align: right; white-space: nowrap; }
+.logpage .private td { color: var(--ink-soft); }
+
+.logpage tfoot td {
+  border-bottom: 0;
+  border-top: 2px solid var(--ink);
+  font-weight: 600;
+}
+
+.chip {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.chip.work { background: var(--work-soft); color: var(--work); }
+.chip.private { background: var(--rule); color: var(--ink-soft); }
+
+.logpage figcaption {
+  padding: 12px 20px 14px 28px;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  border-top: 1px solid var(--rule);
+  max-width: none;
+}
+
+/* ------------------------------------------------------- who we are -- */
+
+.org p { margin: 0; }
+.org .org-name {
+  font-family: Archivo, sans-serif;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.org a { text-decoration: underline; text-decoration-color: var(--brass); }
+
+/* ------------------------------------------------------------ split -- */
+
+.split { display: grid; gap: 8px 56px; }
+@media (min-width: 900px) { .split { grid-template-columns: 1fr 1fr; } }
+.split .prose { max-width: none; }
+.split h2:first-child { margin-top: 0; }
