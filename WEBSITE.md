@@ -1,6 +1,6 @@
 # The website: tax-captain.com
 
-Six static pages, one stylesheet, no JavaScript and no build step. GitHub
+Six static pages plus a 404, one stylesheet, no JavaScript and no build step. GitHub
 Pages serves it for free, and Cloudflare holds the domain's DNS.
 
 ```
@@ -11,7 +11,10 @@ support.html    Support               <- Apple's Support URL
 privacy.html    Privacy Policy        <- Apple's Privacy Policy URL
 terms.html      Terms of Service      <- linked from the in-app paywall
 styles.css      the whole design
+404.html        shown for any address that does not exist (root-relative links)
 favicon.svg     the browser-tab icon
+apple-touch-icon.png  the icon an iPhone uses when the site is saved to the home screen
+og-image.png    the picture shown when a link is shared (Messages, Slack, Facebook)
 CNAME           the custom domain - GitHub Pages reads this, never delete it
 robots.txt      let search engines in
 sitemap.xml     the pages, for search engines

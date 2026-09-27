@@ -11,7 +11,8 @@
   --paper:      #F7F4ED;
   --paper-2:    #FFFFFF;
   --rule:       #D9D2C4;
-  --brass:      #A9761B;
+  --brass:      #8A5F12;   /* 5:1 on --paper, so brass text passes WCAG AA */
+  --on-brass:   #FFFFFF;
   --brass-soft: #F0E3C8;
   --navy:       #0E2233;
   --work:       #2F6B4F;
@@ -36,6 +37,7 @@
     --paper-2:    #12232F;
     --rule:       #263B49;
     --brass:      #E0AE4E;
+    --on-brass:   #12222F;
     --brass-soft: #2A2013;
     --navy:       #081520;
     --work:       #8FD1AE;
@@ -167,7 +169,7 @@ a:focus-visible, button:focus-visible {
 
 .hero h1 { max-width: 16ch; }
 .hero .lede { font-size: var(--step-1); max-width: 46ch; color: #C7D2DA; margin-bottom: 1.4em; }
-.hero .rule { width: 72px; height: 3px; background: var(--brass); margin-bottom: 26px; }
+.hero .rule { width: 72px; height: 3px; background: #E0AE4E; margin-bottom: 26px; }
 
 .badges { display: flex; flex-wrap: wrap; gap: 10px; font-size: var(--step--1); }
 
@@ -264,7 +266,7 @@ section + section { border-top: 1px solid var(--rule); }
 .cta {
   display: inline-block;
   background: var(--brass);
-  color: #12222F;
+  color: var(--on-brass);
   font-family: Archivo, sans-serif;
   font-weight: 700;
   text-decoration: none;
@@ -273,7 +275,7 @@ section + section { border-top: 1px solid var(--rule); }
   margin-top: 6px;
 }
 
-.cta:hover { color: #12222F; filter: brightness(1.07); }
+.cta:hover { color: var(--on-brass); filter: brightness(1.07); }
 
 .updated {
   font-size: var(--step--1);
